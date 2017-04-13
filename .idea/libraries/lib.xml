@@ -1,0 +1,77 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/iri-0.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-xml-query-parser-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-wordnet-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/stax-api-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-test-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-icu-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ojdbc6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org.json.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xercesImpl-2.9.1-patched-XERCESJ-1257.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jieba-analysis-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/arq-2.8.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javaml-0.1.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jena-2.6.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/colt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-queryparser-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-ant-tasks-2.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-analyzers-common-5.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-memory-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/pinyin4j-2.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-spellchecker-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-digester-1.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-beanutils-1.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-5.1.35.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-highlighter-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-log4j12-1.5.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xercesImpl-2.7.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-spatial-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-test-framework-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/Dm7JdbcDriver16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mongo-2.10.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/secondstring-20120620.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-compress-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jsmartcom_zh_CN.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jakarta-regexp-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-4.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-remote-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-instantiated-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-smartcn-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/icu4j-4_8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jena-2.6.4-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-queries-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/icu4j-3.4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-4.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-demo-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/IKAnalyzer2012_u6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/dom4j-2.0.0-ALPHA-2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-misc-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-tests.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-analyzers-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-analyzers-icu-5.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tree_split-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ant-1.7.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/wstx-asl-3.2.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ant-junit-1.7.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-stempel-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ans_seg-20130615.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-benchmark-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-core-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jena-2.6.4-tests.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lucene-grouping-3.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
