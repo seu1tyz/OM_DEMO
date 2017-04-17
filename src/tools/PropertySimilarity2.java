@@ -32,7 +32,7 @@ public class PropertySimilarity2 {
 		ArrayList<HashSet<String>> o2Properties = OWLOntParse2.getAllPropertyIDsSameAsInfo2(o2);
 		int m = o1Properties.size();
 		int n = o2Properties.size();
-		int i,j;fsadfasdf
+		int i,j;
 		//o1是竖着的，o2是横着的
 		SparseDoubleMatrix2D simMatrix=new SparseDoubleMatrix2D(m,n);
 		

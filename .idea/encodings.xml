@@ -2,6 +2,10 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/task/TestMatchTask.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/tools/ClassSimilarity1.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/tools/OWLOntParse1.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/tools/OWLOntParse2.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/tools/PropertySimilarity2.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/tools/Tuning.java" charset="GBK" />
   </component>
 </project>

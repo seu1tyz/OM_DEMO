@@ -1,4 +1,5 @@
 package tools;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,209 +7,291 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.hp.hpl.jena.ontology.OntClass;
 import matcher.DocMatcher;
 import matcher.StrEDMatcher;
 import cern.colt.matrix.impl.SparseDoubleMatrix2D;
-
 import com.hp.hpl.jena.ontology.OntModel;
-/**
- * Æ¥Åä±¾ÌåÄÚ²¿¸ÅÄîÈÎÎñµÄÀà
- * @author seu1tyz
- */
-public class ClassSimilarity2 {
-	
-	/**Á½¸ö±¾ÌåµÄClassIdµÄÒ»¸öÆ¥Åä£¬¿¼ÂÇsameAsµÄÇé¿ö¡£
-	 * @param o1    ±¾Ìå1
-	 * @param o2    ±¾Ìå2
-	 * @returntr
-	 */
-	 public static SparseDoubleMatrix2D getClassIdMatchingResult(OntModel o1,OntModel o2) {
-		 
-			int i, j;sfgsdfg
-			ArrayList<HashSet<String>> o1ClassIds = OWLOntParse2.getAllClassesIDsSameAsInfo2(o1);
-			ArrayList<HashSet<String>> o2ClassIds = OWLOntParse2.getAllClassesIDsSameAsInfo2(o2);
-			
-			int m = o1ClassIds.size();
-			int n = o2ClassIds.size();
-			//o1ÊÇÊú×ÅµÄ£¬o2ÊÇºá×ÅµÄ
-			SparseDoubleMatrix2D simMatrix=new SparseDoubleMatrix2D(m,n);
-			double similarity = 0.0;
-			HashSet<String> o1HashSet = null;
-			HashSet<String> o2HashSet = null;
-			for (i = 0; i < m; i++) {
-				o1HashSet = o1ClassIds.get(i);
-				int o1Size = o1HashSet.size();
-				for (j = 0; j < n; j++) {	
-					o2HashSet = o2ClassIds.get(j);
-					int o2Size = o2HashSet.size();
-					//·ÀÖ¹³öÏÖÄ³ÖÖÇé¿ö
-					if(o1HashSet.equals(o2HashSet)){
-						simMatrix.setQuick(i, j, 1.0);
-						continue;
-					}			
-					//ËµÃ÷ÀïÃæÖ»ÓÐÒ»¸öÔªËØµÄ¼¯ºÏ£¬×î¼òµ¥µÄÒ»ÖÖÇé¿ö
-					if((o1Size + o2Size)==2){
-						similarity = StrEDMatcher.getNormEDSim((String)(o1HashSet.toArray()[0]), (String)(o2HashSet.toArray()[0]));
-					}else{
-						double sum1=0;
-						for(String o1Element:o1HashSet){
-							double sum2=0;
-							for(String o2Element:o2HashSet){
-								sum2 += StrEDMatcher.getNormEDSim(o1Element, o2Element);
-							}
-							sum1 += (sum2 / o2Size);
-						}
-						similarity = (sum1 / o1Size);							
-					}
-					if(similarity > Info.FILTER){
-						simMatrix.setQuick(i, j, similarity);
-					}
-				}
-				System.out.println("i is    "+i+"   computed similarity of"+o1ClassIds.get(i)+
-						"  and  "+o2ClassIds.get(j-1)+" similarity is "+similarity);	
-			}
-			return simMatrix;
-	 } 
-	 
-    /**
- 	 * Á½¸ö±¾ÌåÖ®¼äClassLabelµÄÒ»¸öÆ¥Åä£¬¿¼ÂÇsameAs¿éÖ®¼äÆ¥ÅäµÄÇé¿ö¡£
- 	 * @param o1
- 	 * @param o2
- 	 * @return
- 	 */
-	public static SparseDoubleMatrix2D getClassLabelMatchingResult(OntModel o1,OntModel o2){
-		
-		ArrayList<String> o1ClassLabels = OWLOntParse2.getAllClassesLabelsSameAsInfo2(o1);
-		ArrayList<String> o2ClassLabels = OWLOntParse2.getAllClassesLabelsSameAsInfo2(o2);
-		//o1ÊÇÊú×ÅµÄ
-		int m = o1ClassLabels.size(); int n = o2ClassLabels.size();
-		SparseDoubleMatrix2D simMatrix=new SparseDoubleMatrix2D(m,n);
-		
-		//·Ö±ð±éÀúÁ½¸öÈ¡²¢¼¯£¬´ÊµäµÄÎ¬¶ÈÒ»¶¨ÒªÏàÍ¬£¬²ÅÄÜ±£Ö¤cos()º¯ÊýµÄÕýÈ·ÐÔ
-		HashSet<String> classAllDictSet = new HashSet<String>();
-		HashMap<String, Integer> classAllDictIDFInfo = new HashMap<String, Integer>();
 
-		
-		ArrayList<HashSet<String>> listOfSetsO1 = new ArrayList<HashSet<String>>();
-		ArrayList<HashSet<String>> listOfSetsO2 = new ArrayList<HashSet<String>>();
-		
-		
-		try {	
-			//ÏÈ±éÀúµÚÒ»¸ö±¾Ìå
-			JiebaTokenizer test_Tokenizer = new JiebaTokenizer();		
-			for(int i=0; i<m;i++){
-				List<String> token_list=test_Tokenizer.Tokenizer(o1ClassLabels.get(i));
-				classAllDictSet.addAll(token_list);
-				//¶ÔÃ¿¸öÎÄµµÈ¥ÖØ£¬±£Ö¤IDF¼ÆËãµÄÕýÈ·.
-				HashSet<String> set=new HashSet<String>(token_list);
-				listOfSetsO1.add(set);
-				for(String temp:set){
-					if(classAllDictIDFInfo.containsKey(temp)){
-						classAllDictIDFInfo.put(temp, classAllDictIDFInfo.get(temp) + 1);
-					}else{
-						classAllDictIDFInfo.put(temp,1);
-					}
-				}
-			}
-			
-			//±éÀúÁíÍâÒ»¸ö±¾Ìå
-			for(int i=0;i<n;i++){
-				List<String> token_list=test_Tokenizer.Tokenizer(o2ClassLabels.get(i));
-				classAllDictSet.addAll(token_list);
-				HashSet<String> set=new HashSet<String>(token_list);
-				listOfSetsO2.add(set);
-				for(String temp:set){
-					if(classAllDictIDFInfo.containsKey(temp)){
-						classAllDictIDFInfo.put(temp, classAllDictIDFInfo.get(temp) + 1);
-					}else{
-						classAllDictIDFInfo.put(temp,1);
-					}
-				}		
-			}
-			
-			
-			
-			//µÃµ½´ÊµäÖÐÃ¿¸ö´ÊÔÚ¿Õ¼äÏòÁ¿ÖÐµÄÎ¬¶È¡£
-			HashMap<String,Integer> dictHashMap = Operator.dictToMap(classAllDictSet);
-			System.out.println(dictHashMap);
-			//¹¹ÔìËùÓÐÎÄ±¾µÄÏòÁ¿¿Õ¼ä,ÕâÀï»¹ÊÇÓÃÍôÀÏÊ¦½¨ÒéµÄÑ¹ËõÊý×éÀ´²Ù×÷£¬µ«ÊÇÈ±µãÊÇÑ¹ËõÊý×éÈ¡µÄÊ±ºòÐèÒª±éÀú
-			int dictSize = classAllDictSet.size();
-			
-			SparseDoubleMatrix2D vecHouseO1=new SparseDoubleMatrix2D(m,dictSize);
-			SparseDoubleMatrix2D vecHouseO2=new SparseDoubleMatrix2D(n,dictSize);
-			
-			
-			for(int i=0;i<m;i++){
-				List<String> token_list = test_Tokenizer.Tokenizer(o1ClassLabels.get(i));
-				//ÕâÀï´«ÈëµÄÐÅÏ¢¶¼ÒªÁ¬ÔÚÒ»Æð²Å¿ÉÒÔ
-				double[] vec = DocMatcher.convert2VecUsingDictHashMap(token_list, (m+n), classAllDictIDFInfo, dictHashMap);
-				//±ØÐëÑ­»··ÅÈë£¬È±µã
-				for(int j=0;j<dictSize;j++){
-					if(vec[j]==0){
-						//²»´æÖ±½ÓÌø¹ýÊ¹µÃ¾ØÕó±äµÃÏ¡Êè
-						continue;
-					}
-					vecHouseO1.setQuick(i,j,vec[j]);
-				}	
-			}
-			
-			
-			for(int i=0;i<n;i++){
-				List<String> token_list = test_Tokenizer.Tokenizer(o2ClassLabels.get(i));
-				//ÕâÀï´«ÈëµÄÐÅÏ¢¶¼ÒªÁ¬ÔÚÒ»Æð²Å¿ÉÒÔ
-				double[] vec = DocMatcher.convert2VecUsingDictHashMap(token_list, (m+n), classAllDictIDFInfo, dictHashMap);
-				//±ØÐëÑ­»··ÅÈë£¬È±µã
-				for(int j=0;j<dictSize;j++){
-					if(vec[j]==0){
-						//²»´æÖ±½ÓÌø¹ýÊ¹µÃ¾ØÕó±äµÃÏ¡Êè
-						continue;
-					}
-					vecHouseO2.setQuick(i,j,vec[j]);
-				}	
-			}	
-			
-			
-			//ÔÚËãÏàËÆ¶ÈÖ®Ç°Çå¿ÕÒ»ÏÂÄÚ´æÖÐºóÃæÆäÊµÓÃ²»µ½µÄÊý¾Ý¡£
-			classAllDictSet.clear();
-			classAllDictIDFInfo.clear();
-		//	o1ClassLabels.clear();
-		//	o2ClassLabels.clear();
-		//	o1ClassLabels=null;
-		//	o2ClassLabels=null;
-			classAllDictSet=null;
-			classAllDictIDFInfo=null;
-			System.gc();
-			
-			
-			HashSet<String> set1=null;
-			HashSet<String> set2=null;
-			double similarity=0.0 ; int i,j;
-			for(i = 0;i < m ; i ++){
-				set1=(HashSet<String>)listOfSetsO1.get(i).clone();
-				for(j = 0;j < n; j ++){
-					//Ë³Ðò¶¼ÊÇÒ»Ò»¶ÔÓ¦µÄ	
-					set2=(HashSet<String>) listOfSetsO2.get(j).clone();
-					set2.retainAll(set1);
-					//Èç¹ûËµÁ½¸ö¾ä×ÓÖ®¼äÃ»ÓÐ¹«¹²µÄ¶«Î÷ÄÇÃ´²»ÓÃÔÙ¼ÆËãÁË¡£¿Ï¶¨²»¿ÉÄÜÏàËÆ¡£
-					if(set2.size()==0){
-						continue;
-					}
-					//Õë¶ÔÍôÀÏÊ¦µÄ½¨Òé»¹ÊÇ²ÉÓÃ¶ÔÑ¹Ëõ¾ØÕóÀ´¼ÆËãÏòÁ¿
-					similarity = DocMatcher.computeSparseMatrixSimilarity(vecHouseO1,vecHouseO2,i,j,dictSize);
-					
-					if(similarity>Info.FILTER)
-						simMatrix.setQuick(i,j,similarity);	
-				}
-				listOfSetsO1.get(i).clear();
-				System.out.println("i is    "+i+"   computed similarity of"+o1ClassLabels.get(i)+
-						" and "+ o2ClassLabels.get(j-1) + " similarity is "+similarity);
-			}				
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return simMatrix;
-	}		
-	
+public class ClassSimilarity2 {
+
+
+    public static SparseDoubleMatrix2D getClassIdMatchingResult(OntModel o1, OntModel o2) {
+
+        int i, j;
+        String a = "";
+        String b= "";
+        ArrayList<HashSet<String>> o1ClassURIs = OWLOntParse2.getClassSameAsURIBlocks(o1);
+        ArrayList<HashSet<String>> o2ClassURIs = OWLOntParse2.getClassSameAsURIBlocks(o2);
+        int m = o1ClassURIs.size();
+        int n = o2ClassURIs.size();
+
+        SparseDoubleMatrix2D simMatrix = new SparseDoubleMatrix2D(m, n);
+
+        double similarity = 0.0;
+        HashSet<String> o1HashSet = null;
+        HashSet<String> o2HashSet = null;
+
+        for (i = 0; i < m; i++) {
+            o1HashSet = o1ClassURIs.get(i);
+            int o1Size = o1HashSet.size();
+            if(o1Size == 0){
+                String URI = (String)(o1ClassURIs.get(i).toArray()[0]);
+                a = o1.getOntClass(URI).getLocalName();
+            }
+            for (j = 0; j < n; j++) {
+                o2HashSet = o2ClassURIs.get(j);
+                int o2Size = o2HashSet.size();
+                // Prevent One Situation
+                if (o1HashSet.equals(o2HashSet)) {
+                    simMatrix.setQuick(i, j, 1.0);
+                    continue;
+                }
+                // Normal Situation
+                if ((o1Size + o2Size) == 2) {
+                    String URI = (String)(o2ClassURIs.get(j).toArray()[0]);
+                    b = o2.getOntClass(URI).getLocalName();
+                    similarity = StrEDMatcher.getNormEDSim(a,b);
+                } else {
+                    double sum1 = 0;
+                    for (String o1Element : o1HashSet) {
+                        // URL to Name
+                        o1Element = o1.getOntClass(o1Element).getLocalName();
+                        double sum2 = 0;
+                        for (String o2Element : o2HashSet) {
+                            o2Element = o2.getOntClass(o2Element).getLocalName();
+                            sum2 += StrEDMatcher.getNormEDSim(o1Element, o2Element);
+                        }
+                        sum1 += (sum2 / o2Size);
+                    }
+                    similarity = (sum1 / o1Size);
+                }
+
+                if (similarity > Info.FILTER) {
+                    simMatrix.setQuick(i, j, similarity);
+                }
+            }
+            System.out.println("i   " + i + "  is  computed successfully");
+        }
+        return simMatrix;
+    }
+
+
+    public static SparseDoubleMatrix2D getClassLabelMatchingResult(OntModel o1, OntModel o2) {
+
+        ArrayList<HashSet<String>> o1ClassURIs = OWLOntParse2.getClassSameAsURIBlocks(o1);
+        ArrayList<HashSet<String>> o2ClassURIs = OWLOntParse2.getClassSameAsURIBlocks(o2);
+        //o1 is || state.
+        int m = o1ClassURIs.size();
+        int n = o2ClassURIs.size();
+        SparseDoubleMatrix2D simMatrix = new SparseDoubleMatrix2D(m, n);
+
+        //ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Î¬ï¿½ï¿½Ò»ï¿½ï¿½Òªï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½Ü±ï¿½Ö¤cos()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
+        HashSet<String> classAllDictSet = new HashSet<String>();
+        HashMap<String, Integer> classAllDictIDFInfo = new HashMap<String, Integer>();
+
+
+        ArrayList<HashSet<String>> listOfSetsO1 = new ArrayList<HashSet<String>>();
+        ArrayList<HashSet<String>> listOfSetsO2 = new ArrayList<HashSet<String>>();
+
+
+        try {
+            // iterate the first ontology
+            JiebaTokenizer test_Tokenizer = new JiebaTokenizer();
+            for (int i = 0; i < m; i++) {
+                String label = "";
+                HashSet<String> tempSet = o1ClassURIs.get(i);
+                if(tempSet.size() == 1){
+                    String URI = (String)tempSet.toArray()[0];
+                    label = o1.getOntClass(URI).getLabel(null);
+                    if(label == null || label == ""){
+                        label = "";
+                    }
+                }else{
+                    for(String subURL:tempSet){
+                        OntClass target = o1.getOntClass(subURL);
+                        String temp = target.getLabel(null);
+                        if(temp == null || temp == ""){
+                            temp = "";
+                        }
+                        label += temp;
+                        label += "@";
+                    }
+                }
+
+                List<String> token_list = test_Tokenizer.Tokenizer(label);
+                classAllDictSet.addAll(token_list);
+                //ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Äµï¿½È¥ï¿½Ø£ï¿½ï¿½ï¿½Ö¤IDFï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·.
+                HashSet<String> set = new HashSet<String>(token_list);
+                listOfSetsO1.add(set);
+                for (String temp : set) {
+                    if (classAllDictIDFInfo.containsKey(temp)) {
+                        classAllDictIDFInfo.put(temp, classAllDictIDFInfo.get(temp) + 1);
+                    } else {
+                        classAllDictIDFInfo.put(temp, 1);
+                    }
+                }
+            }
+
+            // iterate the second ontology,o1 and o2 feng qing chu
+            for (int i = 0; i < n; i++) {
+                String label = "";
+                HashSet<String> tempSet = o2ClassURIs.get(i);
+                if(tempSet.size() == 1){
+                    String URI = (String)tempSet.toArray()[0];
+                    label = o2.getOntClass(URI).getLabel(null);
+                    if(label == null || label == ""){
+                        label = "";
+                    }
+                }else{
+                    for(String subURL:tempSet){
+                        OntClass target = o2.getOntClass(subURL);
+                        String temp = target.getLabel(null);
+                        if(temp == null || temp == ""){
+                            temp = "";
+                        }
+                        label += temp;
+                        label += "@";
+                    }
+                }
+
+                List<String> token_list = test_Tokenizer.Tokenizer(label);
+                classAllDictSet.addAll(token_list);
+                HashSet<String> set = new HashSet<String>(token_list);
+                listOfSetsO2.add(set);
+                for (String temp : set) {
+                    if (classAllDictIDFInfo.containsKey(temp)) {
+                        classAllDictIDFInfo.put(temp, classAllDictIDFInfo.get(temp) + 1);
+                    } else {
+                        classAllDictIDFInfo.put(temp, 1);
+                    }
+                }
+            }
+
+
+            //ï¿½Ãµï¿½ï¿½Êµï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Î¬ï¿½È¡ï¿½
+            HashMap<String, Integer> dictHashMap = Operator.dictToMap(classAllDictSet);
+            System.out.println(dictHashMap);
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½,ï¿½ï¿½ï¿½ï»¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¦ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È±ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½
+            int dictSize = classAllDictSet.size();
+
+            SparseDoubleMatrix2D vecHouseO1 = new SparseDoubleMatrix2D(m, dictSize);
+            SparseDoubleMatrix2D vecHouseO2 = new SparseDoubleMatrix2D(n, dictSize);
+
+
+            for (int i = 0; i < m; i++) {
+
+                String label = "";
+                HashSet<String> tempSet = o1ClassURIs.get(i);
+                if(tempSet.size() == 1){
+                    String URI = (String)tempSet.toArray()[0];
+                    label = o1.getOntClass(URI).getLabel(null);
+                    if(label == null || label == ""){
+                        label = "";
+                    }
+                }else{
+                    for(String subURL:tempSet){
+                        OntClass target = o1.getOntClass(subURL);
+                        String temp = target.getLabel(null);
+                        if(temp == null || temp == ""){
+                            temp = "";
+                        }
+                        label += temp;
+                        label += "@";
+                    }
+                }
+
+                List<String> token_list = test_Tokenizer.Tokenizer(label);
+                //ï¿½ï¿½ï¿½ï´«ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Å¿ï¿½ï¿½ï¿½
+                double[] vec = DocMatcher.convert2VecUsingDictHashMap(token_list, (m + n), classAllDictIDFInfo, dictHashMap);
+                //ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬È±ï¿½ï¿½
+                for (int j = 0; j < dictSize; j++) {
+                    if (vec[j] == 0) {
+                        //ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¾ï¿½ï¿½ï¿½ï¿½ï¿½Ï¡ï¿½ï¿½
+                        continue;
+                    }
+                    vecHouseO1.setQuick(i, j, vec[j]);
+                }
+            }
+
+
+            for (int i = 0; i < n; i++) {
+
+                String label = "";
+                HashSet<String> tempSet = o2ClassURIs.get(i);
+                if(tempSet.size() == 1){
+                    String URI = (String)tempSet.toArray()[0];
+                    label = o2.getOntClass(URI).getLabel(null);
+                    if(label == null || label == ""){
+                        label = "";
+                    }
+                }else{
+                    for(String subURL:tempSet){
+                        OntClass target = o2.getOntClass(subURL);
+                        String temp = target.getLabel(null);
+                        if(temp == null || temp == ""){
+                            temp = "";
+                        }
+                        label += temp;
+                        label += "@";
+                    }
+                }
+
+                List<String> token_list = test_Tokenizer.Tokenizer(label);
+                //ï¿½ï¿½ï¿½ï´«ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Å¿ï¿½ï¿½ï¿½
+                double[] vec = DocMatcher.convert2VecUsingDictHashMap(token_list, (m + n), classAllDictIDFInfo, dictHashMap);
+                //ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬È±ï¿½ï¿½
+                for (int j = 0; j < dictSize; j++) {
+                    if (vec[j] == 0) {
+                        //ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¾ï¿½ï¿½ï¿½ï¿½ï¿½Ï¡ï¿½ï¿½
+                        continue;
+                    }
+                    vecHouseO2.setQuick(i, j, vec[j]);
+                }
+            }
+
+
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Ö®Ç°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½
+            classAllDictSet.clear();
+            classAllDictIDFInfo.clear();
+            //	o1ClassLabels.clear();
+            //	o2ClassLabels.clear();
+            //	o1ClassLabels=null;
+            //	o2ClassLabels=null;
+            classAllDictSet = null;
+            classAllDictIDFInfo = null;
+            System.gc();
+
+
+            HashSet<String> set1 = null;
+            HashSet<String> set2 = null;
+            double similarity = 0.0;
+            int i, j;
+            for (i = 0; i < m; i++) {
+                set1 = (HashSet<String>) listOfSetsO1.get(i).clone();
+                for (j = 0; j < n; j++) {
+                    //Ë³ï¿½ï¿½ï¿½ï¿½Ò»Ò»ï¿½ï¿½Ó¦ï¿½ï¿½
+                    set2 = (HashSet<String>) listOfSetsO2.get(j).clone();
+                    set2.retainAll(set1);
+                    //ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ã»ï¿½Ð¹ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½Ù¼ï¿½ï¿½ï¿½ï¿½Ë¡ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
+                    if (set2.size() == 0) {
+                        continue;
+                    }
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¦ï¿½Ä½ï¿½ï¿½é»¹ï¿½Ç²ï¿½ï¿½Ã¶ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                    similarity = DocMatcher.computeSparseMatrixSimilarity(vecHouseO1, vecHouseO2, i, j, dictSize);
+
+                    if (similarity > Info.FILTER)
+                        simMatrix.setQuick(i, j, similarity);
+                }
+                listOfSetsO1.get(i).clear();
+                System.out.println("i is    " + i + "   computed similarity of successfully");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return simMatrix;
+    }
+
 }
