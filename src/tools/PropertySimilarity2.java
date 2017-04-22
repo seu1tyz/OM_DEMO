@@ -169,7 +169,13 @@ public class PropertySimilarity2 {
 					if(label == null || label == ""){
 						label = "";
 					}else{
-						label = label.split("__")[1];
+						String[] temp1 = label.split("__");
+						if(temp1.length < 2){
+							label = "";
+						}else{
+							// Theme Ontology may have Problem
+							label = label.split("__")[1];
+						}
 					}
 				}else{
 					for(String subURL:tempSet){
@@ -178,7 +184,12 @@ public class PropertySimilarity2 {
 						if(temp == null || temp == ""){
 							temp = "";
 						}else{
-							temp = temp.split("__")[1];
+							String[] temp1 = temp.split("__");
+							if(temp1.length < 2){
+								temp = "";
+							}else{
+								temp = temp.split("__")[1];
+							}
 						}
 						label += temp;
 						label += "@";
@@ -255,7 +266,12 @@ public class PropertySimilarity2 {
 					if(label == null || label == ""){
 						label = "";
 					}else {
-						label = label.split("__")[1];
+						String[] temp1 = label.split("__");
+						if(temp1.length < 2){
+							label = "";
+						}else{// Theme Ontology may have Problem
+							label = label.split("__")[1];
+						}
 					}
 				}else{
 					for(String subURL:tempSet){
@@ -263,8 +279,13 @@ public class PropertySimilarity2 {
 						String temp = target.getLabel(null);
 						if(temp == null || temp == ""){
 							temp = "";
-						}else {
-							temp = temp.split("__")[1];
+						}else{
+							String[] temp1 = temp.split("__");
+							if(temp1.length < 2){
+								temp = "";
+							}else{
+								temp = temp.split("__")[1];
+							}
 						}
 						label += temp;
 						label += "@";
@@ -280,8 +301,6 @@ public class PropertySimilarity2 {
 					vecHouseO2.setQuick(i, j, vec[j]);
 				}
 			}
-
-
 
 			propertyAllDictSet.clear();
 			propertyAllDictIDFInfo.clear();
