@@ -35,7 +35,7 @@ public class ClassSimilarity2 {
         for (i = 0; i < m; i++) {
             o1HashSet = o1ClassURIs.get(i);
             int o1Size = o1HashSet.size();
-            if(o1Size == 0){
+            if(o1Size == 1){
                 String URI = (String)(o1ClassURIs.get(i).toArray()[0]);
                 a = o1.getOntClass(URI).getLocalName();
             }
